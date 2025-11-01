@@ -13,7 +13,7 @@ def create_app(test_config=None):                   # In programming, a factory 
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'), # app instance path is where Flask chose the main dir and flaskr.sqlite is the name of file
-    )
+    )                   # by default app.instance_path = ./instance/
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True) # load configs from config.py if it exists

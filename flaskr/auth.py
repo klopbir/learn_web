@@ -26,14 +26,14 @@ def register():
         if error is None:
             try:
                 db.execute(
-                    'INSERT INTO users (username, password) VALUES (?, ?)',
+                    'INSERT INTO user (username, password) VALUES (?, ?)',
                     (username, generate_password_hash(password)),
                 )
                 db.commit()
             except db.IntegrityError:
                 error = 'User already exists.'
             else:
-                return redirect(url_for('auth.login'))                                      # if no errors load login page
+                return redirect(url_for('auth.login')) # finds url by first looking for the function named login # if no errors load login page
 
         flash(error)                                                                                    # adds message t flash stack # can make it display red error message
     return render_template('auth/register.html') # if there is an error load same page but with flash   # sends html to the browser
@@ -64,7 +64,7 @@ def login():
     return render_template('auth/login.html')
 
 @bp.before_app_request
-def load_logged_in_user():
+def load_logged_in_user():                              # so before any view is run we always have the current user
     user_id = session.get('user_id')
 
     if user_id is None:
@@ -84,8 +84,8 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login'))                      # if the g.user is None redirect to login page
 
-        return view(**kwargs)
+        return view(**kwargs)                                           # otherwise proceed to normal function execution
 
     return wrapped_view
